@@ -1,0 +1,24 @@
+{
+  "name": "projet_techno_internet",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fbl07/ProjetTechnoInternet.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/fbl07/ProjetTechnoInternet/issues"
+  },
+  "homepage": "https://github.com/fbl07/ProjetTechnoInternet#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "pug": "^2.0.0-beta11",
+    "x-ray": "^2.3.2"
+  }
+}
