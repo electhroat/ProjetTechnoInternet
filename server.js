@@ -4,12 +4,22 @@ var app = express();
 var scrapper = require('./web-scrapper.js');
 
 app.get('/', function(req, res){
-    var events = scrapper.Scrape();
+    scrapper.Scrape(function(events) {
 
-    var testString = "<html><body>";
+        console.log(events.length);
 
-    events.forEach(function(element) {
-        testString += "<p>Titre:" + element.titre + "<br>Lieu:" + element.lieu + "<br>Date:" + element.date + "<br><img height='200' src='" + element.image + "'><br>**************</p>";
+        var testString = "<html><body>";
+
+        console.log(events.length);
+
+        events.forEach(function(element) {
+            console.log(element);
+            testString += "<p>Titre:" + element.titre + "<br>Lieu:" + element.lieu + "<br>Date:" + element.date + "<br><img height='200' src='" + element.image + "'><br>**************</p>";
+        });
+
+        testString += "</body></html>";
+
+        res.send(testString);
     });
 
 });

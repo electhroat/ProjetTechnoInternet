@@ -1,26 +1,34 @@
 var jsdom = require("jsdom");
+var async = require("async");
 
 jsdom.defaultDocumentFeatures.FetchExternalResources = ["scripts"];
 jsdom.defaultDocumentFeatures.ProcessExternalResources = ["scripts"]; 
 
-exports.Scrape = function() {
+exports.Scrape = function(callback) {
+
+    var calls = [];
 
     var events = [];
 
     config.forEach(function (element) {
         console.log("config.forEach : " + element.url + " /// " + element.selector);
 
-        jsdom.env({
+        calls.push( function(callback) {
+            jsdom.env({
             url:element.url,
-            //scripts:["http://code.jquery.com/jquery.js"],
+            scripts:["http://code.jquery.com/jquery.js"],
             done:function(err, window) {
-                window.$(element.selector).each(function(index, foundNode) {
-                    events.push(element.readfunction(foundNode.innerHtml));
-                });
+                element.addFunction(err, window, events);
+                callback();
             }
         });
+        });
     });
-    return events;
+
+    async.parallel(calls, function() {
+        console.log(events.length);
+        callback(events);
+    });
 }
 
 
@@ -30,15 +38,24 @@ var config = [
       url:"http://www.songkick.com/metro_areas/27381-canada-ottawa",
       selector: null,
       addFunction: function(err, window, events) {
-          window.$("li.with-date").each(function (index, element) {
+          var $ = window.$;
+
+          $("li.with-date").each(function () {
                 var eventInfo = {};
                 
-                eventInfo.date = element.children("strong").children("time").text();
+                //console.log($(this).text());
 
-                var info = element.next();
-                eventInfo.titre = info.children("p .artists .summary").children("a").children("span").children("strong").text() + info.children("p").children("a").children("span").text();
-                eventInfo.lieu = info.children("p .location");
+                //eventInfo.date= window.$("time", window.$("strong", this)).text();
 
+                eventInfo.date = $(this).children("strong").children("time").text();
+
+                var info = $(this).next();
+                eventInfo.titre = info.find("p .artists .summary").find("a").find("span").find("strong").text() + info.find("p").find("a").find("span").text();
+                eventInfo.lieu = info.find("p .location").text();
+                
+                //console.log(events.length);
+                
+                events.push(eventInfo);
           });
       }
 
