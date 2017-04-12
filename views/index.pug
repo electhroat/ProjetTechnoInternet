@@ -1,0 +1,16 @@
+extend layout
+block content
+
+	table
+		thead
+			tr 
+				th Evenement
+				th Salle
+				th Date
+			
+		tbody
+			each item in evenements
+				tr
+					td=	item.nom
+					td= item.salle
+					td= item.date
